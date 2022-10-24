@@ -8,7 +8,8 @@ def index():
         'username': 'cbale',
         'email': 'christianb@movies.com'
     }
-    return render_template('index.html', user=user_info)
+    colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet']
+    return render_template('index.html', user=user_info, colors=colors)
 
 
 @app.route('/posts')
