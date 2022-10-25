@@ -1,2 +1,6 @@
+# Virtual Environment
 venv
+# Python Interpreter Compiled Code
 __pycache__
+# VS Code Debugger Config
+.vscode
