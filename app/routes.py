@@ -31,7 +31,7 @@ def signup():
         # Add a new user to the database
 
         # Flash a success message
-        flash("You have succesffuly signed up!", "success")
+        flash("You have successfully signed up!", "success")
         # Redirect back to home
         return redirect(url_for('index'))
 
