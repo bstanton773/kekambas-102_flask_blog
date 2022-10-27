@@ -89,3 +89,24 @@ def get_post(post_id):
         flash(f"Post with id #{post_id} does not exist", "warning")
         return redirect(url_for('index'))
     return render_template('post.html', post=post)
+
+@app.route('/posts/<post_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_post(post_id):
+    post = Post.query.get(post_id)
+    if not post:
+        flash(f"Post with id #{post_id} does not exist", "warning")
+        return redirect(url_for('index'))
+    if post.author != current_user:
+        flash('You do not have permission to edit this post', 'danger')
+        return redirect(url_for('index'))
+    form = PostForm()
+    if form.validate_on_submit():
+        # Get the form data
+        new_title = form.title.data
+        new_body = form.body.data
+        # update the post
+        post.update(title=new_title, body=new_body)
+        flash(f"{post.title} has been updated", "success")
+        return redirect(url_for('get_post', post_id=post.id))
+    return render_template('edit_post.html', post=post, form=form)
