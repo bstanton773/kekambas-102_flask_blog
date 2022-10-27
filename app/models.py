@@ -65,3 +65,8 @@ class Post(db.Model):
                 setattr(self, key, value)
         # Save the updates to the database
         db.session.commit()
+
+    # Delete post from database
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
