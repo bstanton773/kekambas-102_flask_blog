@@ -7,17 +7,9 @@ from app.models import User, Post
 # Create routes for our app
 @app.route('/')
 def index():
-    user_info = {
-        'username': 'cbale',
-        'email': 'christianb@movies.com'
-    }
-    colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet']
-    return render_template('index.html', user=user_info, colors=colors)
+    posts = Post.query.order_by(Post.date_created.desc()).all()
+    return render_template('index.html', posts=posts)
 
-
-@app.route('/posts')
-def posts():
-    return render_template('posts.html')
 
 
 @app.route('/signup', methods=["GET", "POST"])
