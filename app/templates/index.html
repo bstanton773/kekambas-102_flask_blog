@@ -21,6 +21,7 @@
                     <cite title="Source Title">{{ post.date_created.strftime('%A, %B %d at %I:%M%p') }}</cite>
                 </footer>
             </blockquote>
+            <a href="{{ url_for('get_post', post_id=post.id) }}" class="btn btn-primary mt-2">See More</a>
             </div>
         </div>
     {% endfor %}
