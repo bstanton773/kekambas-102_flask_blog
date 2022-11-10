@@ -1,11 +1,15 @@
 from flask import jsonify, request
 from . import api
+from .auth import basic_auth
 from app.models import Post, User
 
 
-@api.route('/')
+@api.route('/token')
+@basic_auth.login_required
 def index():
-    return 'Hello this is the API'
+    user = basic_auth.current_user()
+    token = user.get_token()
+    return jsonify({'token': token, 'token_expiration': user.token_expiration})
 
 
 @api.route('/posts', methods=['GET'])
