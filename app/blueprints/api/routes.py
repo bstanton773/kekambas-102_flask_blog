@@ -44,3 +44,21 @@ def get_user(user_id):
     user = User.query.get_or_404(user_id)
     print(user)
     return jsonify(user.to_dict())
+
+@api.route('/users', methods=["POST"])
+def create_user():
+    if not request.is_json:
+        return jsonify({"error": 'Your request content-type must be application/json'}), 400
+    data = request.json
+    for field in ['username', 'email', 'password']:
+        if field not in data:
+            return jsonify({"error": f"'{field}' must be in request body"}), 400
+
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+    check_user = User.query.filter( (User.username == username) | (User.email == email) ).first()
+    if check_user is not None:
+        return jsonify({'error': 'User with username and/or email already exists'}), 400
+    new_user = User(username=username, email=email, password=password)
+    return jsonify(new_user.to_dict()), 201

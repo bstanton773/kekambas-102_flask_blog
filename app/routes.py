@@ -22,7 +22,7 @@ def signup():
         username = form.username.data
         password = form.password.data
         print(email, username, password)
-        # Check to see if we have a user with username and/or password:
+        # Check to see if we have a user with username and/or email:
         check_user = User.query.filter( (User.username == username) | (User.email == email) ).first()
         if check_user is not None:
             flash('User with username and/or email already exists', 'danger')
