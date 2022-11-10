@@ -1,4 +1,6 @@
-from datetime import datetime
+import os
+import base64
+from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from app import db, login
@@ -44,6 +46,19 @@ class User(db.Model, UserMixin):
         if with_posts:
             user_dict['posts'] = [post.to_dict() for post in self.posts.all()]
         return user_dict
+
+    def get_token(self, expires_in=3600):
+        now = datetime.utcnow()
+        if self.token and self.token_expiration > now + timedelta(seconds=60):
+            return self.token
+        self.token = base64.b64encode(os.urandom(24)).decode('utf-8')
+        self.token_expiration = now + timedelta(seconds=expires_in)
+        db.session.commit()
+        return self.token
+
+    def revoke_token(self):
+        self.token_expiration = datetime.utcnow() - timedelta(seconds=1)
+        db.session.commit()
 
 
 @login.user_loader
