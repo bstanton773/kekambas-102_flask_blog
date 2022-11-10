@@ -4,6 +4,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from flask_cors import CORS
 # import the Config class from the config module
 from config import Config
 
@@ -21,6 +22,8 @@ migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
 login.login_message_category = 'danger'
+
+CORS(app)
 
 # Import the api blueprint and register it with the Flask Application 
 from app.blueprints.api import api
