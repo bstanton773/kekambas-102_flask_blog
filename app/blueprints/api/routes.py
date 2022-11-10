@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from . import api
-from .auth import basic_auth
+from .auth import basic_auth, token_auth
 from app.models import Post, User
 
 
@@ -23,6 +23,7 @@ def get_post(post_id):
     return jsonify(post.to_dict())
 
 @api.route('/posts', methods=['POST'])
+@token_auth.login_required
 def create_post():
     # Check to see that the request sent a request body that is JSON
     if not request.is_json:
@@ -30,7 +31,7 @@ def create_post():
     # Get the data from the request body
     data = request.json
     # Validate the incoming data
-    for field in ['title', 'body', 'user_id']:
+    for field in ['title', 'body']:
         if field not in data:
             # If the field is not in the request body, throw an error saying they are missing a field
             return jsonify({"error": f"'{field}' must be in request body"}), 400
@@ -38,9 +39,9 @@ def create_post():
     # pull the fields from the request data
     title = data.get('title')
     body = data.get('body')
-    user_id = data.get('user_id')
+    user = token_auth.current_user()
     # Create a new instance of Post (which auto adds to db)
-    new_post = Post(title=title, body=body, user_id=user_id)
+    new_post = Post(title=title, body=body, user_id=user.id)
     return jsonify(new_post.to_dict()), 201
 
 @api.route('/users/<user_id>')
